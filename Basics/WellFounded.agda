@@ -2,7 +2,7 @@ open import Relation.Binary.PropositionalEquality
 open import Relation.Unary hiding (Pred)
 open import Relation.Nullary
 
-module Wellfounded where
+module Basics.WellFounded where
 
 
   -- general form of relations

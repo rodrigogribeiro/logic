@@ -8,7 +8,7 @@ open import Data.Sum
 open import Function using (_∘_)
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality
-open import Relation.Nullary using (Dec ; yes ; no)
+open import Relation.Nullary using (Dec ; yes ; no ; ¬_)
 
 -- list membership
 
@@ -17,6 +17,9 @@ infix 6 _∈_
 data _∈_ {A : Set}(x : A) : List A → Set where
   here  : ∀ {xs} → x ∈ (x ∷ xs)
   there : ∀ {y ys} → x ∈ ys → x ∈ (y ∷ ys)
+
+_∉_ : {A : Set}(x : A) → List A → Set
+x ∉ xs = ¬ (x ∈ xs)
 
 private
   variable
@@ -56,14 +59,15 @@ open ⇔-Reasoning
 
 module MembershipDec (_≟_ : Decidable {A = A} _≡_) where
 
+  private
+    lemma : ∀ {x y : A}{ys} → x ∈ (y ∷ ys) → x ≡ y ⊎ x ∈ ys
+    lemma {ys = ys} here = inj₁ refl
+    lemma {ys = ys} (there p) = inj₂ p
+
   _∈?_ : ∀ (x : A)(xs : List A) → Dec (x ∈ xs)
   x ∈? [] = no (λ ())
   x ∈? (y ∷ ys) with x ≟ y
   ...| yes p rewrite p = yes here
   ...| no  q with x ∈? ys
   ... | yes p' = yes (there p')
-  ... | no q' = no ([ q , q' ]′ ∘ lemma) 
-    where
-      lemma : ∀ {x y ys} → x ∈ (y ∷ ys) → x ≡ y ⊎ x ∈ ys
-      lemma {ys = ys} here = inj₁ refl
-      lemma {ys = ys} (there p) = inj₂ p
+  ... | no q' = no ([ q , q' ]′ ∘ lemma)

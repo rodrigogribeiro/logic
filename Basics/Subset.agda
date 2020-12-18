@@ -44,8 +44,9 @@ xs ⊆ ys = ∀ z → z ∈ xs → z ∈ ys
 ⊆-∷ : ∀ {xs ys : List A}{x : A} → xs ⊆ ys → x ∷ xs ⊆ x ∷ ys
 ⊆-∷ p = λ z → λ{ here → here ; (there q) → there (p z q) }
 
--- ⊆-∉ : ∀ {xs ys : List A}{x : A} → xs ⊆ ys → ¬ x ∈ xs → ¬ x ∈ ys
--- ⊆-∉ {x = x} xs⊆ys ¬x∈xs x∈ys = {!!}
+⊆-snd : ∀ (xs : List A)(x y : A) → x ∷ xs ⊆ x ∷ y ∷ xs
+⊆-snd xs x y .x here = here
+⊆-snd xs x y z (there p) = there (there p)
 
 module ⊆-Reasoning where
 

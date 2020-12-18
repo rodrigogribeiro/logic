@@ -60,4 +60,6 @@ open ⇔-Reasoning
 ≈-∈ xs≈ys here = _⇔_.to (xs≈ys _) here
 ≈-∈ xs≈ys (there p) = _⇔_.to (xs≈ys _) (there p)
 
-
+∈-≈-elim : ∀ {xs}{x : A} → x ∈ xs → xs ≈ (x ∷ xs)
+∈-≈-elim here z = record { to = there ; from = λ{ here → here ; (there q) → q } }
+∈-≈-elim (there p) z = record { to = there ; from = λ{ here → there p ; (there q) → q} }
