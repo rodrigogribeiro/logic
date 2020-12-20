@@ -55,6 +55,14 @@ open ⇔-Reasoning
      ((x ∈ (x' ∷ xs)) ⊎ (x ∈ ys))
     ∎
 
+∈-++-inj-left : ∀ {xs : List A}{ys x} → x ∈ xs → x ∈ (xs ++ ys)
+∈-++-inj-left here = here
+∈-++-inj-left (there p) = there (∈-++-inj-left p)
+
+∈-++-inj-right : ∀ {xs : List A}{ys x} → x ∈ ys → x ∈ (xs ++ ys)
+∈-++-inj-right {xs = []} p = p
+∈-++-inj-right {xs = x ∷ xs} p = there (∈-++-inj-right {xs = xs} p)
+
 -- decidability of list membership
 
 module MembershipDec (_≟_ : Decidable {A = A} _≡_) where
@@ -70,4 +78,4 @@ module MembershipDec (_≟_ : Decidable {A = A} _≡_) where
   ...| yes p rewrite p = yes here
   ...| no  q with x ∈? ys
   ... | yes p' = yes (there p')
-  ... | no q' = no ([ q , q' ]′ ∘ lemma)
+  ... | no q' = no ([ q , q' ]′ ∘ lemma) 

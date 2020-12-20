@@ -33,6 +33,11 @@ xs ⊆ ys = ∀ z → z ∈ xs → z ∈ ys
 ⊆-++-left {A} {xs} {[]} z p = p
 ⊆-++-left {A} {xs} {x ∷ ys} z p = there (⊆-++-left z p)
 
+⊆-++-right : ∀ {xs ys : List A}
+             → xs ⊆ (xs ++ ys)
+⊆-++-right z here = here
+⊆-++-right z (there p) = there (⊆-++-right z p)
+
 ⊆-cong : ∀ {xs ys zs ws : List A}
        → xs ≈ zs
        → ys ≈ ws

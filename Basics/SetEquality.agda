@@ -63,3 +63,11 @@ open ⇔-Reasoning
 ∈-≈-elim : ∀ {xs}{x : A} → x ∈ xs → xs ≈ (x ∷ xs)
 ∈-≈-elim here z = record { to = there ; from = λ{ here → here ; (there q) → q } }
 ∈-≈-elim (there p) z = record { to = there ; from = λ{ here → there p ; (there q) → q} }
+
+≈-swap : ∀ {xs}{x y : A} → x ∷ y ∷ xs ≈ y ∷ x ∷ xs
+≈-swap z = record { to = λ{ here → there here
+                          ; (there here) → here
+                          ; (there (there q)) → there (there q) }
+                  ; from = λ{ here → there here
+                            ; (there here) → here
+                            ; (there (there q)) → there (there q)} }

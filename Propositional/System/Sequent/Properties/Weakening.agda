@@ -13,14 +13,6 @@ weakening : ∀ {Γ Γ' : Ctx}{C : Form}
             → Γ ⇒ C
             → Γ' ⇒ C
 weakening Γ⊆Γ' (init x) = init (Γ⊆Γ' _ x)
-weakening Γ⊆Γ' (∧R p p₁) = ∧R (weakening Γ⊆Γ' p) (weakening Γ⊆Γ' p₁)
-weakening Γ⊆Γ' (∧L₁ x p) = ∧L₁ (Γ⊆Γ' _ x) (weakening (⊆-∷ Γ⊆Γ') p)
-weakening Γ⊆Γ' (∧L₂ x p) = ∧L₂ (Γ⊆Γ' _ x) (weakening (⊆-∷ Γ⊆Γ') p)
 weakening Γ⊆Γ' (⇒R p) = ⇒R (weakening (⊆-∷ Γ⊆Γ') p)
 weakening Γ⊆Γ' (⇒L x p p₁) = ⇒L (Γ⊆Γ' _ x) (weakening Γ⊆Γ' p) (weakening (⊆-∷ Γ⊆Γ') p₁)
-weakening Γ⊆Γ' (∨R₁ p) = ∨R₁ (weakening Γ⊆Γ' p)
-weakening Γ⊆Γ' (∨R₂ p) = ∨R₂ (weakening Γ⊆Γ' p)
-weakening Γ⊆Γ' (∨L x p p₁) = ∨L (Γ⊆Γ' _ x) (weakening (⊆-∷ Γ⊆Γ') p) (weakening (⊆-∷ Γ⊆Γ') p₁)
-weakening Γ⊆Γ' ⊤R = ⊤R
 weakening Γ⊆Γ' (⊥L x) = ⊥L (Γ⊆Γ' _ x)
-weakening Γ⊆Γ' (structural x p) = weakening (⊆-cong (≈-sym x) ≈-refl Γ⊆Γ') p
