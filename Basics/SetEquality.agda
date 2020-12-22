@@ -6,9 +6,9 @@ open import Basics.Membership
 open import Data.Empty
 open import Data.List
 open import Data.Sum
-open import Relation.Binary
+open import Relation.Binary hiding (_⇔_)
 open import Relation.Binary.PropositionalEquality
-open import Relation.Nullary using (Dec ; yes ; no)
+open import Relation.Nullary using (Dec ; yes ; no ; ¬_)
 
 
 -- set equality for lists
@@ -56,6 +56,14 @@ open ⇔-Reasoning
                    ; (there q) → there (_⇔_.from (p z) q) } }
 
 
+≈-[] : ∀ {xs : List A} → xs ≈ [] → xs ≡ []
+≈-[] {xs = []} eq = refl
+≈-[] {xs = x ∷ xs} eq with eq x
+... | record { to = to ; from = from } = ⊥-elim (absurd (to here))
+  where
+    absurd : ∀ {x : A} → ¬ (x ∈ [])
+    absurd ()
+
 ≈-∈ : ∀ {xs ys : List A}{x : A} → xs ≈ ys → x ∈ xs → x ∈ ys
 ≈-∈ xs≈ys here = _⇔_.to (xs≈ys _) here
 ≈-∈ xs≈ys (there p) = _⇔_.to (xs≈ys _) (there p)
@@ -71,3 +79,18 @@ open ⇔-Reasoning
                   ; from = λ{ here → there here
                             ; (there here) → here
                             ; (there (there q)) → there (there q)} }
+
+
+
+
+≈-++-cong : ∀ {xs xs' ys ys' : List A}
+            → xs ≈ xs'
+            → ys ≈ ys'
+            → xs ++ ys ≈ xs' ++ ys'
+≈-++-cong {xs = xs}{xs' = xs'}{ys = ys}{ys' = ys'} eq1 eq2 z
+  = begin
+      z ∈ (xs ++ ys)          ⇔⟨ ∈-++ xs ys z ⟩
+      ((z ∈ xs) ⊎ (z ∈ ys))   ⇔⟨ ⊎-cong (eq1 z) (eq2 z) ⟩
+      ((z ∈ xs') ⊎ (z ∈ ys')) ⇔⟨ ⇔-sym (∈-++ xs' ys' z) ⟩
+      z ∈ (xs' ++ ys')
+    ∎ 

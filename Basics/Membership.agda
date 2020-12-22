@@ -6,7 +6,7 @@ open import Data.Empty
 open import Data.List
 open import Data.Sum
 open import Function using (_∘_)
-open import Relation.Binary
+open import Relation.Binary hiding (_⇔_)
 open import Relation.Binary.PropositionalEquality
 open import Relation.Nullary using (Dec ; yes ; no ; ¬_)
 
