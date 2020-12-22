@@ -53,6 +53,9 @@ xs ⊆ ys = ∀ z → z ∈ xs → z ∈ ys
 ⊆-snd xs x y .x here = here
 ⊆-snd xs x y z (there p) = there (there p)
 
+⊆-∷-r : ∀ {xs ys : List A}{x} → xs ⊆ ys → xs ⊆ (x ∷ ys)
+⊆-∷-r p z q = there (p _ q)
+
 module ⊆-Reasoning where
 
   infix  3 _∎

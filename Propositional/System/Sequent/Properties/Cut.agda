@@ -31,8 +31,11 @@ genCut `⊥ (⊥L x) p2 = ⊥L (∈-++-inj-left x)
 genCut {C = C}(A `⊃ A₁) (init x) (init x₁) with ≡-Form C (A `⊃ A₁)
 ...| yes q rewrite q = init (∈-++-inj-left x)
 ...| no  q = weakening ⊆-++-left (init (∈-⊝-≢ x₁ q))
-genCut (A `⊃ A₁) (init x) (⇒R {B = B} p2) = {!!}
-genCut (A `⊃ A₁) (init x) (⇒L x₁ p2 p3) = {!!}
+genCut (A `⊃ A₁) (init x) (⇒R {B = B} p2) with ≡-Form B (A `⊃ A₁)
+...| yes q rewrite q = ⇒R (weakening (⊆-∷-r ⊆-++-right) (init x))
+...| no  q = ⇒R (exchange (≈-∷ (≈-sym (≈-++-⊝ x)))
+                          (weakening (⊆-∷ ⊆-++-left) p2))
+genCut (A `⊃ A₁) (init x) (⇒L {A = A₂}{B = B} x₁ p2 p3) = {!!}
 genCut (A `⊃ A₁) (init x) (⊥L x₁) = ⊥L (∈-++-inj-right (∈-⊝-≢ x₁ λ ()))
 genCut (A `⊃ A₁) (⇒R p1) p2 = {!!}
 genCut (A `⊃ A₁) (⇒L x p1 p3) p2 = {!!}
