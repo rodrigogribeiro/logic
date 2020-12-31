@@ -11,6 +11,7 @@ open import Data.Sum
 open import Basics.Bijection
 open import Basics.Membership
 open import Basics.SetEquality
+open import Basics.Subset
 
 -- definition of the set difference operation
 
@@ -30,7 +31,6 @@ x ∷ xs ⊝ y with x ≟ y
 ...| yes q rewrite q = ∈-⊝-≢ p neq
 ...| no  q = there (∈-⊝-≢ p neq)
 
-open ⇔-Reasoning
 open MembershipDec _≟_
 
 
@@ -45,28 +45,32 @@ private
              ; from = λ{ here → ⊥-elim (eq refl)
                        ; (there q) → q} }
 
-  ∈-⊝ : ∀ (ys : List A)(z x : A)
-        → ¬ (x ≡ z) → z ∈ (ys ⊝ x) ⇔ z ∈ ys
-  ∈-⊝ [] z x eq = ⇔-refl
-  ∈-⊝ (x₁ ∷ ys) z x eq with x₁ ≟ x
-  ...| yes q rewrite q
-    = begin
-        z ∈ (ys ⊝ x) ⇔⟨ ∈-⊝ ys z x eq ⟩
-        z ∈ ys       ⇔⟨ ∈-⇔-inv ys z x eq ⟩
-        z ∈ (x ∷ ys)
-       ∎
-  ...| no  q with x₁ ≟ z
-  ...   | yes q' rewrite q' = record { to = λ _ → here
-                                     ; from = λ _ → here }
-  ...   | no  q'
-    = begin
-        z ∈ (x₁ ∷ (ys ⊝ x)) ⇔⟨ ⇔-sym (∈-⇔-inv (ys ⊝ x) z x₁ q') ⟩
-        z ∈ (ys ⊝ x)        ⇔⟨ ∈-⊝ ys z x eq ⟩
-        z ∈ ys              ⇔⟨ record { to = there
-                                      ; from = λ{ here → ⊥-elim (q' refl)
-                                                ; (there k) → k } } ⟩
-        z ∈ (x₁ ∷ ys)
-       ∎ 
+∈-⊝ : ∀ (ys : List A)(z x : A)
+      → ¬ (x ≡ z) → z ∈ (ys ⊝ x) ⇔ z ∈ ys
+∈-⊝ [] z x eq = ⇔-refl
+∈-⊝ (x₁ ∷ ys) z x eq with x₁ ≟ x
+...| yes q rewrite q
+  = begin
+    z ∈ (ys ⊝ x) ⇔⟨ ∈-⊝ ys z x eq ⟩
+      z ∈ ys       ⇔⟨ ∈-⇔-inv ys z x eq ⟩
+      z ∈ (x ∷ ys)
+    ∎
+  where
+    open ⇔-Reasoning
+...| no  q with x₁ ≟ z
+...   | yes q' rewrite q' = record { to = λ _ → here
+                                   ; from = λ _ → here }
+...   | no  q'
+  = begin
+    z ∈ (x₁ ∷ (ys ⊝ x)) ⇔⟨ ⇔-sym (∈-⇔-inv (ys ⊝ x) z x₁ q') ⟩
+      z ∈ (ys ⊝ x)        ⇔⟨ ∈-⊝ ys z x eq ⟩
+      z ∈ ys              ⇔⟨ record { to = there
+                                    ; from = λ{ here → ⊥-elim (q' refl)
+                                             ; (there k) → k } } ⟩
+      z ∈ (x₁ ∷ ys)
+    ∎ 
+  where
+    open ⇔-Reasoning
 
 
 -- congruence lemma for difference
@@ -84,6 +88,8 @@ private
       ((z ∈ xs) ⊎ (z ∈ (x ∷ ys))) ⇔⟨ ⇔-sym (∈-++ xs (x ∷ ys) z) ⟩
       z ∈ (xs ++ (x ∷ ys))
     ∎
+    where
+      open ⇔-Reasoning
 ...| no  q | yes q' rewrite q' = record { to = λ _ → ∈-++-inj-left p
                                         ; from = λ _ → ∈-++-inj-left p }
 ...| no  q | no  q' with x₁ ≟ z
@@ -100,3 +106,15 @@ private
       ((z ∈ xs) ⊎ (z ∈ (x₁ ∷ ys)))       ⇔⟨ ⇔-sym (∈-++ xs (x₁ ∷ ys) z) ⟩
       z ∈ (xs ++ (x₁ ∷ ys))
     ∎
+    where
+      open ⇔-Reasoning
+
+⊆-++-⊝-left : ∀ {xs ys : List A}{x} → x ∈ xs → ys ⊆ (xs ++ (ys ⊝ x))
+⊆-++-⊝-left {x = x} x∈xs z z∈xs with x ≟ z
+...| yes q rewrite q = ∈-++-inj-left x∈xs
+...| no  q = ∈-++-inj-right (_⇔_.from (∈-⊝ _ z x q) z∈xs)
+
+⊆-++-⊝-≠ : ∀ {xs ys : List A}{x y} → ¬ (x ≡ y) → y ∈ xs → x ∷ ys ⊆ (xs ++ x ∷ (ys ⊝ y))
+⊆-++-⊝-≠ {xs = xs}{ys = ys}{x = x}{y = y} x≠y y∈xs with x ≟ y | ⊆-++-⊝-left {ys = x ∷ ys} y∈xs
+...| yes q | k rewrite q = ⊥-elim (x≠y refl)
+...| no  q | k  = k

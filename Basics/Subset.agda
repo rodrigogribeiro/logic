@@ -5,7 +5,9 @@ open import Basics.Membership
 open import Basics.SetEquality
 open import Data.Empty
 open import Data.List
+open import Data.Sum
 open import Relation.Nullary
+open import Relation.Binary.PropositionalEquality
 
 private
   variable
@@ -46,6 +48,7 @@ xs ⊆ ys = ∀ z → z ∈ xs → z ∈ ys
 ⊆-cong xs≈zs ys≈ws xs⊆ys z p
   = _⇔_.to (ys≈ws z) (xs⊆ys z (_⇔_.from (xs≈zs z) p))
 
+
 ⊆-∷ : ∀ {xs ys : List A}{x : A} → xs ⊆ ys → x ∷ xs ⊆ x ∷ ys
 ⊆-∷ p = λ z → λ{ here → here ; (there q) → there (p z q) }
 
@@ -72,3 +75,15 @@ module ⊆-Reasoning where
   _∎ _ = ⊆-refl
 
   syntax step-⊆  x y⊆z x⊆y = x ⊆⟨ x⊆y ⟩ y⊆z
+
+open ⊆-Reasoning
+
+⊆-++ : ∀ {xs xs' ys ys'  : List A} → xs ⊆ xs'
+                                   → ys ⊆ ys'
+                                   → (xs ++ ys) ⊆ (xs' ++ ys')
+⊆-++ {xs = []} {xs' = []} {ys = ys} {ys' = ys'} xs⊆xs' ys⊆ys' = ys⊆ys'
+⊆-++ {xs = []} {xs' = x ∷ xs'} {ys = ys} {ys' = ys'} xs⊆xs' ys⊆ys' z z∈ys = ∈-++-inj-right (ys⊆ys' _ z∈ys)
+⊆-++ {xs = x ∷ xs} {xs' = xs'} {ys = ys} {ys' = ys'} xs⊆xs' ys⊆ys' .x here = ∈-++-inj-left (xs⊆xs' _ here)
+⊆-++ {xs = x ∷ xs} {xs' = xs'} {ys = ys} {ys' = ys'} xs⊆xs' ys⊆ys' z (there z∈x∷xs++ys) with _⇔_.to (∈-++ xs ys z) z∈x∷xs++ys
+... | inj₁ a = ∈-++-inj-left (xs⊆xs' z (there a))
+... | inj₂ b = ∈-++-inj-right (ys⊆ys' z b)

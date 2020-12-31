@@ -7,7 +7,7 @@ open import Data.Empty
 open import Data.List
 open import Data.Sum
 open import Relation.Binary hiding (_⇔_)
-open import Relation.Binary.PropositionalEquality
+open import Relation.Binary.PropositionalEquality hiding ([_])
 open import Relation.Nullary using (Dec ; yes ; no ; ¬_)
 
 
@@ -81,7 +81,27 @@ open ⇔-Reasoning
                             ; (there (there q)) → there (there q)} }
 
 
-
+≈-∷-++-swap : ∀ {xs ys : List A}{x} → (x ∷ xs ++ ys) ≈ (xs ++ x ∷ ys)
+≈-∷-++-swap {xs = xs}{ys = ys}{x = x} z
+  = begin
+      z ∈ (x ∷ xs ++ ys)                    ⇔⟨ ∈-++ (x ∷ xs) ys z ⟩
+      ((z ∈ (x ∷ xs)) ⊎ (z ∈ ys))           ⇔⟨ ⊎-cong ⇔-refl ⇔-refl ⟩
+      ((z ∈ ([ x ] ++ xs)) ⊎ (z ∈ ys))      ⇔⟨ ⊎-cong lemma ⇔-refl ⟩
+      (((z ∈ xs) ⊎ (z ∈ [ x ])) ⊎ (z ∈ ys)) ⇔⟨ ⇔-sym ⊎-assoc ⟩
+      ((z ∈ xs) ⊎ ((z ∈ [ x ]) ⊎ (z ∈ ys))) ⇔⟨ ⊎-cong ⇔-refl (⇔-sym (∈-++ [ x ] ys z)) ⟩
+      ((z ∈ xs) ⊎ (( z ∈ ( [ x ] ++ ys )))) ⇔⟨ ⇔-refl ⟩
+      ((z ∈ xs) ⊎ (z ∈ (x ∷ ys)))           ⇔⟨ ⇔-sym (∈-++ xs (x ∷ ys) z) ⟩
+      z ∈ (xs ++ (x ∷ ys))
+    ∎
+  where
+    lemma : z ∈ (x ∷ xs) ⇔ ((z ∈ xs) ⊎ (z ∈ [ x ]))
+    lemma
+      = begin
+           z ∈ (x ∷ xs) ⇔⟨ ⇔-refl ⟩
+           z ∈ ([ x ] ++ xs) ⇔⟨ ∈-++ [ x ] xs z ⟩
+           ((z ∈ [ x ]) ⊎ (z ∈ xs)) ⇔⟨ ⊎-comm ⟩
+           ((z ∈ xs) ⊎ (z ∈ [ x ]))
+         ∎
 
 ≈-++-cong : ∀ {xs xs' ys ys' : List A}
             → xs ≈ xs'
