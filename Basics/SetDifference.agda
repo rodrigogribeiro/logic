@@ -131,3 +131,14 @@ private
 ⊆-++-⊝-head {x = .z} (there {_} x∈xs) z here | no q | no q' = ⊥-elim (q' refl)
 ⊆-++-⊝-head {x = x} (there {_} x∈xs) z (there z∈x∷ys) | no q | no q'
   = there (∈-++-inj-right (_⇔_.from (∈-⊝ _ z x q') z∈x∷ys))
+
+⊆-++-⊝-∷ : ∀ {xs ys : List A}{y} → (xs ++ ((y ∷ ys) ⊝ y)) ⊆ (xs ++ y ∷ (ys ⊝ y))
+⊆-++-⊝-∷ {xs = xs}{ys = ys}{y = y} with y ≟ y
+...| yes q
+  = begin
+      xs ++ (ys ⊝ y)        ⊆⟨ ⊆-++ {ys = ys ⊝ y}{ys' = y ∷ (ys ⊝ y)} ⊆-refl (λ _ → there) ⟩
+      xs ++ (y ∷ (ys ⊝ y))
+     ∎
+    where
+      open ⊆-Reasoning
+...| no q = ⊥-elim (q refl)
