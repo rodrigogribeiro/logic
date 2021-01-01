@@ -43,10 +43,15 @@ genCut {Γ' = Γ'}(A `⊃ A₁) (init x) (⇒L {A = A₂}{B = B}{C = C} x₁ p2 
        (weakening (⊆-++-⊝-left x) p2)
        (exchange (≈-sym (≈-∷-++-swap {ys = Γ' ⊝ (A `⊃ A₁)}))
                  (weakening (⊆-++-⊝-≠ (λ ()) x) p3))
-...| no  q | no q'  = ⇒L (∈-++-inj-right (_⇔_.from (∈-⊝ Γ' _ _ (λ x → q (sym x))) x₁))
-                         {!!}
-                         (exchange (≈-sym (≈-∷-++-swap {ys = Γ' ⊝ (A `⊃ A₁)}))
-                                   (weakening (⊆-++-⊝-≠ {!!} x) p3))
+...| no  q | no q'  with ≡-Form B (A `⊃ A₁) | ≡-Form A₂ (A `⊃ A₁)
+...   | yes a | yes b rewrite a | b = weakening (⊆-++-⊝-head x) p3
+...   | yes a | no  b rewrite a = weakening (⊆-++-⊝-head x) p3
+...   | no  a | yes b rewrite b = ⇒L (∈-++-inj-right (_⇔_.from (∈-⊝ Γ' ((A `⊃ A₁) `⊃ B) (A `⊃ A₁) (λ ())) x₁))
+                                     (weakening (⊆-++-⊝-left x) p2)
+                                     (weakening (⊆-∷ (⊆-++-⊝-left x)) p3)
+...   | no  a | no  b = ⇒L (∈-++-inj-right (_⇔_.from (∈-⊝ Γ' (A₂ `⊃ B) (A `⊃ A₁) (λ k → q (sym k))) x₁))
+                           (weakening (⊆-++-⊝-left x) p2)
+                           (weakening (⊆-∷ (⊆-++-⊝-left x)) p3)
 genCut (A `⊃ A₁) (init x) (⊥L x₁) = ⊥L (∈-++-inj-right (∈-⊝-≢ x₁ λ ()))
 genCut (A `⊃ A₁) (⇒R p1) p2 = {!!}
 genCut (A `⊃ A₁) (⇒L x p1 p3) p2 = {!!}

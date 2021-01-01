@@ -118,3 +118,16 @@ private
 ⊆-++-⊝-≠ {xs = xs}{ys = ys}{x = x}{y = y} x≠y y∈xs with x ≟ y | ⊆-++-⊝-left {ys = x ∷ ys} y∈xs
 ...| yes q | k rewrite q = ⊥-elim (x≠y refl)
 ...| no  q | k  = k
+
+⊆-++-⊝-head : ∀ {xs ys : List A}{x} → x ∈ xs → (x ∷ ys) ⊆ (xs ++ (ys ⊝ x))
+⊆-++-⊝-head {x = x} here z z∈x∷ys with x ≟ z
+...| yes q rewrite q = here
+⊆-++-⊝-head {x = .z} here z here | no q = ⊥-elim (q refl)
+⊆-++-⊝-head {x = x} here z (there z∈x∷ys) | no q = ∈-++-inj-right (_⇔_.from (∈-⊝ _ z x q) z∈x∷ys)
+⊆-++-⊝-head {x = x}(there {y = y} x∈xs) z z∈x∷ys with y ≟ z
+...| yes q rewrite q = here
+...| no  q with x ≟ z
+...   | yes q'  rewrite q' =  ∈-++-inj-left (there x∈xs)
+⊆-++-⊝-head {x = .z} (there {_} x∈xs) z here | no q | no q' = ⊥-elim (q' refl)
+⊆-++-⊝-head {x = x} (there {_} x∈xs) z (there z∈x∷ys) | no q | no q'
+  = there (∈-++-inj-right (_⇔_.from (∈-⊝ _ z x q') z∈x∷ys))
