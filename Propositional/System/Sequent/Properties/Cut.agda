@@ -60,7 +60,7 @@ genCut {Γ' = Γ'}(A `⊃ A₁) (⇒R p1) (⇒R {A = A₂}{B = B} p2) with ≡-F
 ...| yes q rewrite q = ⇒R (exchange (≈-sym (≈-∷-++-swap {ys = Γ' ⊝ (A `⊃ A₁)}))
                                     (weakening ⊆-++-⊝-∷ (genCut _ (⇒R p1) p2)))
 ...| no  q = ⇒R (exchange (≈-sym (≈-∷-++-swap {ys = Γ' ⊝ (A `⊃ A₁)}))
-                          (weakening {!⊆-++-⊝-∷!} (genCut _ (⇒R p1) p2)))
+                          (weakening (⊆-++-⊝-∷-≠ q) (genCut _ (⇒R p1) p2)))
 genCut (A `⊃ A₁) (⇒R p1) (⇒L x p2 p3) = {!!}
 genCut (A `⊃ A₁) (⇒R p1) (⊥L x) = ⊥L (∈-++-inj-right (_⇔_.from (∈-⊝ _ `⊥ (A `⊃ A₁) (λ ())) x))
 genCut (A `⊃ A₁) (⇒L x p1 p3) p2 = {!!}

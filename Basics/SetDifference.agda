@@ -142,3 +142,8 @@ private
     where
       open ⊆-Reasoning
 ...| no q = ⊥-elim (q refl)
+
+⊆-++-⊝-∷-≠ :  ∀ {xs ys : List A}{x y} → ¬ (x ≡ y) → (xs ++ ((x ∷ ys) ⊝ y)) ⊆ (xs ++ x ∷ (ys ⊝ y))
+⊆-++-⊝-∷-≠ {xs = xs}{ys = ys}{x = x}{y = y} x≠y with x ≟ y
+...| yes q = ⊥-elim (x≠y q)
+...| no q  = ⊆-refl
