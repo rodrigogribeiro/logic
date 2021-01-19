@@ -109,6 +109,8 @@ private
     where
       open ⇔-Reasoning
 
+-- more lemmas about difference used in weakening proofs
+
 ⊆-++-⊝-left : ∀ {xs ys : List A}{x} → x ∈ xs → ys ⊆ (xs ++ (ys ⊝ x))
 ⊆-++-⊝-left {x = x} x∈xs z z∈xs with x ≟ z
 ...| yes q rewrite q = ∈-++-inj-left x∈xs

@@ -61,8 +61,22 @@ genCut {Γ' = Γ'}(A `⊃ A₁) (⇒R p1) (⇒R {A = A₂}{B = B} p2) with ≡-F
                                     (weakening ⊆-++-⊝-∷ (genCut _ (⇒R p1) p2)))
 ...| no  q = ⇒R (exchange (≈-sym (≈-∷-++-swap {ys = Γ' ⊝ (A `⊃ A₁)}))
                           (weakening (⊆-++-⊝-∷-≠ q) (genCut _ (⇒R p1) p2)))
-genCut (A `⊃ A₁) (⇒R p1) (⇒L x p2 p3) = {!!}
+genCut {C = C}(A `⊃ A₁) (⇒R p1) (⇒L {A = A₂}{B = B} x p2 p3) with ≡-Form C (A `⊃ A₁)
+...| yes q = {!!}
+...| no  q = {!!}
 genCut (A `⊃ A₁) (⇒R p1) (⊥L x) = ⊥L (∈-++-inj-right (_⇔_.from (∈-⊝ _ `⊥ (A `⊃ A₁) (λ ())) x))
-genCut (A `⊃ A₁) (⇒L x p1 p3) p2 = {!!}
+genCut {C = C}(A `⊃ A₁) (⇒L {A = A₂}{B = B} x p1 p3) (init x₁) with ≡-Form C (A `⊃ A₁)
+...| yes q rewrite q = weakening ⊆-++-right (⇒L x p1 p3)
+...| no  q = init (∈-++-inj-right (∈-⊝-≢ x₁ q))
+genCut (A `⊃ A₁) (⇒L x p1 p3) (⇒R p2) = {!!}
+genCut (A `⊃ A₁) (⇒L x p1 p3) (⇒L x₁ p2 p4) = {!!}
+genCut (A `⊃ A₁) (⇒L x p1 p3) (⊥L x₁) = ⊥L (∈-++-inj-right (∈-⊝-≢ x₁ (λ ())))
 genCut (A `⊃ A₁) (⊥L x) p2 = ⊥L (∈-++-inj-left x)
 
+
+-- cut : ∀ {Γ C} A → Γ ⇒ A → (A ∷ Γ) ⇒ C → Γ ⇒ C
+-- cut `⊥ (init x) e = ⊥L x
+-- cut `⊥ (⇒L x d d₁) e = {!!}
+-- cut `⊥ (⊥L x) e = ⊥L x
+-- cut (A `⊃ A₁) d e = {!!}
+-- --
